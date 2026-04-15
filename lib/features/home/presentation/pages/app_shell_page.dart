@@ -32,20 +32,31 @@ class _AppShellPageState extends State<AppShellPage> {
       body: IndexedStack(index: _currentIndex, children: pages),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
-        onDestinationSelected: (index) => setState(() => _currentIndex = index),
+        onDestinationSelected: (index) =>
+            setState(() => _currentIndex = index),
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.home_outlined), label: 'Home'),
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home_rounded),
+            label: 'Home',
+          ),
           NavigationDestination(
             icon: Icon(Icons.explore_outlined),
+            selectedIcon: Icon(Icons.explore_rounded),
             label: 'Explore',
           ),
           NavigationDestination(
-            icon: Icon(Icons.add_circle_outline),
+            icon: Icon(Icons.add_circle_outline_rounded),
+            selectedIcon: Icon(Icons.add_circle_rounded),
             label: 'Post',
           ),
-          NavigationDestination(icon: Icon(Icons.search), label: 'Search'),
           NavigationDestination(
-            icon: Icon(Icons.person_outline),
+            icon: Icon(Icons.search_rounded),
+            label: 'Search',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline_rounded),
+            selectedIcon: Icon(Icons.person_rounded),
             label: 'Profile',
           ),
         ],

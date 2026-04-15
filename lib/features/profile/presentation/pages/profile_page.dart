@@ -3,10 +3,39 @@ import 'package:first_flutter_app/features/auth/presentation/cubits/auth_cubit.d
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({required this.user, super.key});
 
   final AppUser user;
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  String _anucalLabel = 'Anucal';
+  bool _editingLabel = false;
+  late final TextEditingController _labelController;
+
+  @override
+  void initState() {
+    super.initState();
+    _labelController = TextEditingController(text: _anucalLabel);
+  }
+
+  @override
+  void dispose() {
+    _labelController.dispose();
+    super.dispose();
+  }
+
+  void _saveLabel() {
+    final trimmed = _labelController.text.trim();
+    setState(() {
+      if (trimmed.isNotEmpty) _anucalLabel = trimmed;
+      _editingLabel = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,42 +49,69 @@ class ProfilePage extends StatelessWidget {
       Colors.indigoAccent,
     ];
 
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('@${user.username}'),
+        title: Text(
+          widget.user.username,
+          style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+        ),
         actions: [
           IconButton(
             onPressed: () => context.read<AuthCubit>().logout(),
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout_rounded),
           ),
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: const [
+              children: [
                 _StatItem(label: 'Followers', value: '244'),
                 _StatItem(label: 'Following', value: '181'),
-                _StatItem(label: 'Anucal', value: '3,084'),
+                GestureDetector(
+                  onTap: () {
+                    _labelController.text = _anucalLabel;
+                    setState(() => _editingLabel = true);
+                  },
+                  child: _AnucalStatItem(
+                    label: _anucalLabel,
+                    value: '3,084',
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Rename Anucal label',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
+            if (_editingLabel) ...[
+              const SizedBox(height: 16),
+              TextField(
+                controller: _labelController,
+                autofocus: true,
+                textInputAction: TextInputAction.done,
+                onSubmitted: (_) => _saveLabel(),
+                style: textTheme.bodyMedium,
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 12,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                hintText: 'e.g. booyas',
               ),
+            ],
+            const SizedBox(height: 24),
+            Text(
+              'Your lacuna',
+              style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
-            const SizedBox(height: 16),
-            Text('Your blobs', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
             Expanded(
               child: Wrap(
                 spacing: 16,
@@ -69,7 +125,10 @@ class ProfilePage extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: LinearGradient(
-                          colors: [blobColors[index], blobColors[index].withAlpha(90)],
+                          colors: [
+                            blobColors[index],
+                            blobColors[index].withAlpha(90),
+                          ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
@@ -81,6 +140,7 @@ class ProfilePage extends StatelessWidget {
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
+                            fontSize: 12,
                           ),
                         ),
                       ),
@@ -104,15 +164,56 @@ class _StatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
         Text(
           value,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
         ),
-        Text(label),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AnucalStatItem extends StatelessWidget {
+  const _AnucalStatItem({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    return Column(
+      children: [
+        Text(
+          value,
+          style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(height: 2),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: textTheme.bodySmall?.copyWith(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(width: 3),
+            Icon(Icons.edit_rounded, size: 11, color: colorScheme.primary),
+          ],
+        ),
       ],
     );
   }

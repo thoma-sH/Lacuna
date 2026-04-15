@@ -8,24 +8,42 @@ class HomeFeedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
+      appBar: AppBar(
+        title: Text(
+          'Home',
+          style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+        ),
+      ),
       body: ListView.builder(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         itemCount: _mockPosts.length,
         itemBuilder: (context, index) {
           final post = _mockPosts[index];
-          return Card(
-            margin: const EdgeInsets.only(bottom: 16),
+          return Container(
+            margin: const EdgeInsets.only(bottom: 20),
+            decoration: BoxDecoration(
+              color: colorScheme.surface,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: colorScheme.outlineVariant.withOpacity(0.5),
+              ),
+            ),
             clipBehavior: Clip.antiAlias,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: 180,
+                  height: 170,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [post.blobColor.withAlpha(220), post.blobColor],
+                      colors: [
+                        post.blobColor.withAlpha(220),
+                        post.blobColor,
+                      ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -35,43 +53,71 @@ class HomeFeedPage extends StatelessWidget {
                       post.blobName,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 28,
+                        fontSize: 26,
                         fontWeight: FontWeight.w700,
+                        letterSpacing: 0.2,
                       ),
                     ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '@${post.author}',
-                        style: Theme.of(context).textTheme.titleMedium,
+                        post.author,
+                        style: textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      const SizedBox(height: 6),
-                      Text(post.caption),
+                      const SizedBox(height: 5),
+                      Text(
+                        post.caption,
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          height: 1.5,
+                        ),
+                      ),
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          const Icon(Icons.location_on_outlined, size: 18),
+                          Icon(
+                            Icons.location_on_outlined,
+                            size: 14,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
                           const SizedBox(width: 4),
-                          Text(post.location),
+                          Text(
+                            post.location,
+                            style: textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 12),
                       Row(
                         children: [
-                          const Icon(Icons.favorite_border),
-                          const SizedBox(width: 16),
-                          const Icon(Icons.bookmark_border),
-                          const SizedBox(width: 16),
-                          const Icon(Icons.thumb_up_alt_outlined),
-                          const SizedBox(width: 8),
-                          const Icon(Icons.thumb_down_alt_outlined),
+                          Icon(Icons.favorite_border_rounded,
+                              size: 20, color: colorScheme.onSurfaceVariant),
+                          const SizedBox(width: 14),
+                          Icon(Icons.bookmark_border_rounded,
+                              size: 20, color: colorScheme.onSurfaceVariant),
+                          const SizedBox(width: 14),
+                          Icon(Icons.thumb_up_alt_outlined,
+                              size: 20, color: colorScheme.onSurfaceVariant),
+                          const SizedBox(width: 6),
+                          Icon(Icons.thumb_down_alt_outlined,
+                              size: 20, color: colorScheme.onSurfaceVariant),
                           const Spacer(),
-                          Text('${post.netScore} Anucal'),
+                          Text(
+                            '${post.netScore} ${post.anucalLabel}',
+                            style: textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: colorScheme.primary,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -84,8 +130,8 @@ class HomeFeedPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {},
-        icon: const Icon(Icons.refresh),
-        label: Text('Welcome @${user.username}'),
+        icon: const Icon(Icons.refresh_rounded),
+        label: Text('Welcome ${user.username}'),
       ),
     );
   }
@@ -111,7 +157,7 @@ final _mockPosts = <_FeedPost>[
   _FeedPost(
     author: 'ivy',
     blobName: 'Sad',
-    caption: 'Rainy mood today. Quiet walk and thoughts.',
+    caption: 'Rainy mood today. Quiet walk and audio thoughts.',
     location: 'Seattle, Washington',
     netScore: 94,
     blobColor: Colors.deepPurple,
@@ -126,6 +172,7 @@ class _FeedPost {
     required this.location,
     required this.netScore,
     required this.blobColor,
+    this.anucalLabel = 'Anucal',
   });
 
   final String author;
@@ -134,4 +181,5 @@ class _FeedPost {
   final String location;
   final int netScore;
   final Color blobColor;
+  final String anucalLabel;
 }
