@@ -5,7 +5,7 @@ My first project with Flutter.
 ## Social Media App
 # Lacuna
 
-A social media app I designed to be a mixture of Og Snapchat and Pinterest. Create your own albums and post photos or videos that you think belong in those albums.
+Lacuna is another word for a void or gap. Lacuna is here to fill the void in our social media lives. A social media app I designed to be a mixture of Og Snapchat and Pinterest. Create your own albums and post photos or videos that you think belong in those albums. Reconnect with what social media is supposed to be, sharing your real interests and pasttimes with real friends and followers. Be your own influencer.
 Users can upvote or downvote posts whether they believe it matches/enhances/promotes the theme of the album it was posted in. Entirely up to user discretion!
 It is a work in progress! Thanks for stopping by.
 
