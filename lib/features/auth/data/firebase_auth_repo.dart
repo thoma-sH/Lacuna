@@ -15,9 +15,8 @@ class FirebaseAuthRepo implements AuthRepo {
       // create the user
       AppUser user = AppUser(
         userId: userCredential.user!.uid,
-        email: email,
-        name: ''
-        );
+        username: email.split('@').first,
+      );
 
       // return user
       return user;
@@ -39,9 +38,8 @@ class FirebaseAuthRepo implements AuthRepo {
       // create the user
       AppUser user = AppUser(
         userId: userCredential.user!.uid,
-        email: email,
-        name: ''
-        );
+        username: email.split('@').first,
+      );
 
       // return user
       return user;
@@ -70,8 +68,7 @@ class FirebaseAuthRepo implements AuthRepo {
     // user exists
     return AppUser(
       userId: firebaseUser.uid,
-      email: firebaseUser.email!,
-      name: '',
-      );
+      username: firebaseUser.email?.split('@').first ?? 'user',
+    );
   }
 }
