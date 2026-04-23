@@ -50,3 +50,10 @@ app.*.map.json
 # Firebase — do not commit; run `flutterfire configure` per machine / CI secret
 /android/app/google-services.json
 /lib/firebase_options.dart
+
+# Secrets — never commit API keys or environment variables
+.env
+*.env
+
+# Claude Code settings and custom skills (local only)
+.claude/

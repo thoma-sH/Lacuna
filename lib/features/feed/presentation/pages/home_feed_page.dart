@@ -40,10 +40,7 @@ class HomeFeedPage extends StatelessWidget {
                   height: 170,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [
-                        post.blobColor.withAlpha(220),
-                        post.blobColor,
-                      ],
+                      colors: [post.blobColor.withAlpha(220), post.blobColor],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -99,17 +96,29 @@ class HomeFeedPage extends StatelessWidget {
                       const SizedBox(height: 12),
                       Row(
                         children: [
-                          Icon(Icons.favorite_border_rounded,
-                              size: 20, color: colorScheme.onSurfaceVariant),
+                          Icon(
+                            Icons.favorite_border_rounded,
+                            size: 20,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
                           const SizedBox(width: 14),
-                          Icon(Icons.bookmark_border_rounded,
-                              size: 20, color: colorScheme.onSurfaceVariant),
+                          Icon(
+                            Icons.bookmark_border_rounded,
+                            size: 20,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
                           const SizedBox(width: 14),
-                          Icon(Icons.thumb_up_alt_outlined,
-                              size: 20, color: colorScheme.onSurfaceVariant),
+                          Icon(
+                            Icons.thumb_up_alt_outlined,
+                            size: 20,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
                           const SizedBox(width: 6),
-                          Icon(Icons.thumb_down_alt_outlined,
-                              size: 20, color: colorScheme.onSurfaceVariant),
+                          Icon(
+                            Icons.thumb_down_alt_outlined,
+                            size: 20,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
                           const Spacer(),
                           Text(
                             '${post.netScore} ${post.anucalLabel}',
@@ -172,7 +181,6 @@ class _FeedPost {
     required this.location,
     required this.netScore,
     required this.blobColor,
-    this.anucalLabel = 'Anucal',
   });
 
   final String author;
@@ -181,5 +189,5 @@ class _FeedPost {
   final String location;
   final int netScore;
   final Color blobColor;
-  final String anucalLabel;
+  final String anucalLabel = "";
 }

@@ -3,6 +3,19 @@ import 'package:first_flutter_app/features/auth/presentation/cubits/auth_cubit.d
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+const _slateBg = Color(0xFF0F1216);
+const _slateSurface = Color(0xFF161B21);
+const _slateText = Color(0xFFE5E9EE);
+const _slateMuted = Color(0xFF8A95A4);
+const _slateFaint = Color(0xFF5A6573);
+
+const _spaceXs = 4.0;
+const _spaceSm = 8.0;
+const _spaceMd = 16.0;
+const _spaceLg = 24.0;
+const _spaceXl = 32.0;
+const _spaceXxl = 48.0;
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({required this.user, super.key});
 
@@ -37,184 +50,328 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  void _startEditingLabel() {
+    _labelController.text = _anucalLabel;
+    setState(() => _editingLabel = true);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final blobSizes = [90.0, 70.0, 120.0, 62.0, 82.0, 74.0];
-    final blobColors = [
-      Colors.deepPurpleAccent,
-      Colors.pinkAccent,
-      Colors.blueAccent,
-      Colors.teal,
-      Colors.orangeAccent,
-      Colors.indigoAccent,
-    ];
-
-    final textTheme = Theme.of(context).textTheme;
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.user.username,
-          style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => context.read<AuthCubit>().logout(),
-            icon: const Icon(Icons.logout_rounded),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _StatItem(label: 'Followers', value: '244'),
-                _StatItem(label: 'Following', value: '181'),
-                GestureDetector(
-                  onTap: () {
-                    _labelController.text = _anucalLabel;
-                    setState(() => _editingLabel = true);
-                  },
-                  child: _AnucalStatItem(
-                    label: _anucalLabel,
-                    value: '3,084',
+      backgroundColor: _slateBg,
+      body: SafeArea(
+        bottom: false,
+        child: ShaderMask(
+          shaderCallback: (rect) => const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.transparent, Colors.black],
+            stops: [0.0, 0.06],
+          ).createShader(rect),
+          blendMode: BlendMode.dstIn,
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              SliverToBoxAdapter(
+                child: _TopBar(
+                  onLogout: () => context.read<AuthCubit>().logout(),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: _IdentityBlock(username: widget.user.username),
+              ),
+              SliverToBoxAdapter(
+                child: _StatsRow(
+                  anucalLabel: _anucalLabel,
+                  onTapAnucal: _startEditingLabel,
+                ),
+              ),
+              if (_editingLabel)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      _spaceLg,
+                      _spaceMd,
+                      _spaceLg,
+                      0,
+                    ),
+                    child: TextField(
+                      controller: _labelController,
+                      autofocus: true,
+                      textInputAction: TextInputAction.done,
+                      onSubmitted: (_) => _saveLabel(),
+                      onTapOutside: (_) => _saveLabel(),
+                      style: const TextStyle(color: _slateText, fontSize: 14),
+                      cursorColor: _slateText,
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        filled: true,
+                        fillColor: _slateSurface,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 12,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ],
-            ),
-            if (_editingLabel) ...[
-              const SizedBox(height: 16),
-              TextField(
-                controller: _labelController,
-                autofocus: true,
-                textInputAction: TextInputAction.done,
-                onSubmitted: (_) => _saveLabel(),
-                style: textTheme.bodyMedium,
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 12,
+              const SliverPadding(
+                padding: EdgeInsets.fromLTRB(
+                  _spaceLg,
+                  _spaceXxl,
+                  _spaceLg,
+                  _spaceMd,
+                ),
+                sliver: SliverToBoxAdapter(
+                  child: Text(
+                    'lacuna',
+                    style: TextStyle(
+                      color: _slateFaint,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 2.5,
+                    ),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(
+                  _spaceLg,
+                  0,
+                  _spaceLg,
+                  _spaceXxl,
+                ),
+                sliver: SliverGrid(
+                  gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: _spaceMd,
+                        crossAxisSpacing: _spaceMd,
+                      ),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => _BlobTile(blob: _blobPalette[index]),
+                    childCount: _blobPalette.length,
                   ),
                 ),
               ),
             ],
-            const SizedBox(height: 24),
-            Text(
-              'Your lacuna',
-              style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 14),
-            Expanded(
-              child: Wrap(
-                spacing: 16,
-                runSpacing: 16,
-                children: List.generate(blobSizes.length, (index) {
-                  return GestureDetector(
-                    onLongPress: () {},
-                    child: Container(
-                      width: blobSizes[index],
-                      height: blobSizes[index],
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [
-                            blobColors[index],
-                            blobColors[index].withAlpha(90),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Blob ${index + 1}',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            ),
-          ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+const _blobPalette = <_Blob>[
+  _Blob('Saved', Color(0xFF4A5568)),
+  _Blob('Beach', Color(0xFFB8956A)),
+  _Blob('Concerts', Color(0xFF7E5A8C)),
+  _Blob('Vibing', Color(0xFFB85F47)),
+  _Blob('School', Color(0xFF6B7A8F)),
+  _Blob('Sad', Color(0xFF2D3748)),
+  _Blob('Roadtrip', Color(0xFF6B8E6B)),
+  _Blob('Coffee', Color(0xFFC4B89E)),
+  _Blob('Sunsets', Color(0xFFD4A5A5)),
+];
+
+class _Blob {
+  const _Blob(this.name, this.color);
+  final String name;
+  final Color color;
+}
+
+class _TopBar extends StatelessWidget {
+  const _TopBar({required this.onLogout});
+
+  final VoidCallback onLogout;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(_spaceSm, _spaceSm, _spaceSm, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          IconButton(
+            onPressed: onLogout,
+            splashRadius: 20,
+            icon: const Icon(
+              Icons.logout_rounded,
+              color: _slateFaint,
+              size: 20,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _IdentityBlock extends StatelessWidget {
+  const _IdentityBlock({required this.username});
+
+  final String username;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(_spaceLg, _spaceLg, _spaceLg, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            username,
+            style: const TextStyle(
+              color: _slateText,
+              fontSize: 32,
+              fontWeight: FontWeight.w300,
+              letterSpacing: -0.5,
+              height: 1.1,
+            ),
+          ),
+          const SizedBox(height: _spaceXs),
+          Text(
+            '@${username.toLowerCase()}',
+            style: const TextStyle(
+              color: _slateFaint,
+              fontSize: 13,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatsRow extends StatelessWidget {
+  const _StatsRow({required this.anucalLabel, required this.onTapAnucal});
+
+  final String anucalLabel;
+  final VoidCallback onTapAnucal;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(_spaceLg, _spaceXl, _spaceLg, 0),
+      child: Row(
+        children: [
+          const _StatItem(value: '244', label: 'followers'),
+          const SizedBox(width: _spaceXl),
+          const _StatItem(value: '181', label: 'following'),
+          const SizedBox(width: _spaceXl),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: onTapAnucal,
+            child: _StatItem(
+              value: '3,084',
+              label: anucalLabel.toLowerCase(),
+              editable: true,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
 class _StatItem extends StatelessWidget {
-  const _StatItem({required this.label, required this.value});
+  const _StatItem({
+    required this.value,
+    required this.label,
+    this.editable = false,
+  });
 
-  final String label;
   final String value;
+  final String label;
+  final bool editable;
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           value,
-          style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          style: const TextStyle(
+            color: _slateText,
+            fontSize: 22,
+            fontWeight: FontWeight.w500,
+            letterSpacing: -0.3,
           ),
+        ),
+        const SizedBox(height: _spaceXs),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: const TextStyle(
+                color: _slateMuted,
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                letterSpacing: 0.2,
+              ),
+            ),
+            if (editable) ...[
+              const SizedBox(width: _spaceXs),
+              const Icon(Icons.edit_rounded, size: 10, color: _slateFaint),
+            ],
+          ],
         ),
       ],
     );
   }
 }
 
-class _AnucalStatItem extends StatelessWidget {
-  const _AnucalStatItem({required this.label, required this.value});
+class _BlobTile extends StatelessWidget {
+  const _BlobTile({required this.blob});
 
-  final String label;
-  final String value;
+  final _Blob blob;
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    return Column(
-      children: [
-        Text(
-          value,
-          style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+    return GestureDetector(
+      onLongPress: () {},
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: RadialGradient(
+            center: const Alignment(-0.3, -0.3),
+            radius: 1.1,
+            colors: [
+              Color.lerp(blob.color, Colors.white, 0.18) ?? blob.color,
+              blob.color,
+              Color.lerp(blob.color, Colors.black, 0.30) ?? blob.color,
+            ],
+            stops: const [0.0, 0.6, 1.0],
+          ),
         ),
-        const SizedBox(height: 2),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              label,
-              style: textTheme.bodySmall?.copyWith(
-                color: colorScheme.primary,
-                fontWeight: FontWeight.w500,
-              ),
+        child: Center(
+          child: Text(
+            blob.name,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.3,
             ),
-            const SizedBox(width: 3),
-            Icon(Icons.edit_rounded, size: 11, color: colorScheme.primary),
-          ],
+          ),
         ),
-      ],
+      ),
     );
   }
 }
