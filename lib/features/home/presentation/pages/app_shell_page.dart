@@ -1,9 +1,11 @@
 import 'package:first_flutter_app/features/auth/domain/entities/app_user.dart';
 import 'package:first_flutter_app/features/explore/presentation/pages/explore_page.dart';
 import 'package:first_flutter_app/features/feed/presentation/pages/home_feed_page.dart';
+import 'package:first_flutter_app/features/home/presentation/widgets/lacuna_nav_bar.dart';
 import 'package:first_flutter_app/features/post/presentation/pages/post_capture_page.dart';
 import 'package:first_flutter_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:first_flutter_app/features/search/presentation/pages/search_page.dart';
+import 'package:first_flutter_app/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppShellPage extends StatefulWidget {
@@ -29,35 +31,19 @@ class _AppShellPageState extends State<AppShellPage> {
     ];
 
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: pages),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) =>
-            setState(() => _currentIndex = index),
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home_rounded),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.explore_outlined),
-            selectedIcon: Icon(Icons.explore_rounded),
-            label: 'Explore',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.add_circle_outline_rounded),
-            selectedIcon: Icon(Icons.add_circle_rounded),
-            label: 'Post',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.search_rounded),
-            label: 'Search',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline_rounded),
-            selectedIcon: Icon(Icons.person_rounded),
-            label: 'Profile',
+      backgroundColor: AppColors.bgBase,
+      extendBody: true,
+      body: Stack(
+        children: [
+          IndexedStack(index: _currentIndex, children: pages),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: LacunaNavBar(
+              currentIndex: _currentIndex,
+              onTap: (index) => setState(() => _currentIndex = index),
+            ),
           ),
         ],
       ),

@@ -4,6 +4,10 @@ import 'package:first_flutter_app/features/auth/presentation/cubits/auth_states.
 import 'package:first_flutter_app/features/auth/presentation/pages/login_page.dart';
 import 'package:first_flutter_app/features/auth/presentation/pages/splash_page.dart';
 import 'package:first_flutter_app/features/home/presentation/pages/app_shell_page.dart';
+import 'package:first_flutter_app/shared/theme/app_theme.dart';
+import 'package:first_flutter_app/shared/theme/lacuna_theme.dart';
+import 'package:first_flutter_app/shared/theme/lacuna_theme_provider.dart';
+import 'package:first_flutter_app/shared/theme/theme_variants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,17 +16,24 @@ class BlobApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => AuthCubit(authRepo: MockAuthRepo())..checkAuth(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Lacuna',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: const _AuthGate(),
-      ),
+    return ValueListenableBuilder<LacunaThemeVariant>(
+      valueListenable: lacunaThemeNotifier,
+      builder: (_, variant, _) {
+        final theme = themeFor(variant);
+        return LacunaThemeScope(
+          theme: theme,
+          child: BlocProvider(
+            create: (_) => AuthCubit(authRepo: MockAuthRepo())..checkAuth(),
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Lacuna',
+              theme: AppTheme.dark(),
+              themeMode: ThemeMode.dark,
+              home: const _AuthGate(),
+            ),
+          ),
+        );
+      },
     );
   }
 }
