@@ -2,7 +2,6 @@ import 'package:first_flutter_app/features/auth/domain/entities/app_user.dart';
 import 'package:first_flutter_app/features/feed/presentation/widgets/feed_post_card.dart';
 import 'package:first_flutter_app/features/feed/presentation/widgets/immersive_feed_tile.dart';
 import 'package:first_flutter_app/features/game/presentation/pages/friend_or_foe_page.dart';
-import 'package:first_flutter_app/shared/theme/app_colors.dart';
 import 'package:first_flutter_app/shared/theme/app_motion.dart';
 import 'package:first_flutter_app/shared/theme/app_spacing.dart';
 import 'package:first_flutter_app/shared/widgets/frost_panel.dart';
@@ -51,7 +50,7 @@ class _HomeFeedPageState extends State<HomeFeedPage> {
     final bottomInset =
         MediaQuery.of(context).padding.bottom + _navBarReservedHeight;
     return Scaffold(
-      backgroundColor: AppColors.bgBase,
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
           PageView.builder(
@@ -96,7 +95,7 @@ class _ImmersivePageScrollPhysics extends PageScrollPhysics {
       SpringDescription.withDampingRatio(
         mass: 0.5,
         stiffness: 100,
-        ratio: 0.55,
+        ratio: 0.85,
       );
 
   @override

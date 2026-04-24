@@ -41,7 +41,7 @@ class _PostCapturePageState extends State<PostCapturePage> {
         _selectedAlbum != null ? _albums[_selectedAlbum!].color : null;
 
     return Scaffold(
-      backgroundColor: AppColors.bgBase,
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
           const Positioned.fill(child: GrainOverlay()),

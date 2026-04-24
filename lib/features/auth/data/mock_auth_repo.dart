@@ -4,6 +4,10 @@ import 'package:first_flutter_app/features/auth/domain/entities/app_user.dart';
 import 'package:first_flutter_app/features/auth/domain/entities/repos/auth_repo.dart';
 
 class MockAuthRepo implements AuthRepo {
+  // This is a simple in-memory mock authentication repository. 
+  // It simulates network delays and stores user accounts in a static map. 
+  // The current authenticated user is also stored in a static variable. 
+  // This allows for testing the authentication flow without needing a real backend service.
   static final Map<String, _MockAccount> _accountsByUsername = {};
 
   static AppUser? _currentUser;

@@ -1,6 +1,4 @@
-import 'dart:ui';
-
-import 'package:first_flutter_app/shared/theme/app_colors.dart';
+import 'package:first_flutter_app/shared/widgets/glass_surface.dart';
 import 'package:flutter/material.dart';
 
 class FrostPanel extends StatelessWidget {
@@ -23,22 +21,11 @@ class FrostPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: tint ?? AppColors.bgDeep.withValues(alpha: 0.42),
-            borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(
-              color: borderColor ?? AppColors.borderHairline,
-              width: 0.5,
-            ),
-          ),
-          child: padding != null ? Padding(padding: padding!, child: child) : child,
-        ),
-      ),
+    return GlassSurface(
+      borderRadius: borderRadius,
+      padding: padding,
+      tintOverride: tint,
+      child: child,
     );
   }
 }

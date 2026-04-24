@@ -5,7 +5,6 @@ import 'package:first_flutter_app/features/home/presentation/widgets/lacuna_nav_
 import 'package:first_flutter_app/features/post/presentation/pages/post_capture_page.dart';
 import 'package:first_flutter_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:first_flutter_app/features/search/presentation/pages/search_page.dart';
-import 'package:first_flutter_app/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppShellPage extends StatefulWidget {
@@ -19,23 +18,29 @@ class AppShellPage extends StatefulWidget {
 
 class _AppShellPageState extends State<AppShellPage> {
   int _currentIndex = 0;
+  late final List<Widget> _pages;
 
   @override
-  Widget build(BuildContext context) {
-    final pages = [
+  void initState() {
+    super.initState();
+    _pages = [
       HomeFeedPage(user: widget.user),
       const ExplorePage(),
       const PostCapturePage(),
       const SearchPage(),
       ProfilePage(user: widget.user),
     ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: AppColors.bgBase,
+      backgroundColor: Colors.transparent,
       extendBody: true,
       body: Stack(
         children: [
-          IndexedStack(index: _currentIndex, children: pages),
+          IndexedStack(index: _currentIndex, children: _pages),
           Positioned(
             left: 0,
             right: 0,

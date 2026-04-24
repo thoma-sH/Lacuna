@@ -9,6 +9,7 @@ import 'package:first_flutter_app/shared/theme/app_theme.dart';
 import 'package:first_flutter_app/shared/theme/lacuna_theme.dart';
 import 'package:first_flutter_app/shared/theme/lacuna_theme_provider.dart';
 import 'package:first_flutter_app/shared/theme/theme_variants.dart';
+import 'package:first_flutter_app/shared/widgets/themed_background.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,6 +34,12 @@ class BlobApp extends StatelessWidget {
               theme: AppTheme.dark(),
               themeMode: ThemeMode.dark,
               home: const _AuthGate(),
+              builder: (context, child) => Stack(
+                children: [
+                  const Positioned.fill(child: ThemedBackground()),
+                  ?child,
+                ],
+              ),
             ),
           ),
         );

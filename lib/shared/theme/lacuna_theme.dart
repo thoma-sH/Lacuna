@@ -14,6 +14,21 @@ enum LacunaThemeVariant {
   barbaric,
 }
 
+enum SurfaceStyle {
+  solid,
+  frosted,
+  liquidGlass,
+  paper,
+}
+
+enum BackgroundMode {
+  flat,
+  gradient,
+  orbs,
+  aurora,
+  noise,
+}
+
 class ColorPalette {
   const ColorPalette({
     required this.bgDeep,
@@ -73,6 +88,13 @@ class LacunaTheme {
     required this.fontName,
     required this.radiusScale,
     required this.grainOpacity,
+    required this.surfaceStyle,
+    required this.backgroundMode,
+    required this.bgGradient,
+    required this.blurSigma,
+    required this.specularOpacity,
+    required this.depthShadow,
+    required this.motionScale,
   });
 
   final LacunaThemeVariant variant;
@@ -83,4 +105,12 @@ class LacunaTheme {
   final String fontName;
   final double radiusScale;
   final double grainOpacity;
+
+  final SurfaceStyle surfaceStyle;
+  final BackgroundMode backgroundMode;
+  final List<Color> bgGradient;
+  final double blurSigma;
+  final double specularOpacity;
+  final double depthShadow;
+  final double motionScale;
 }

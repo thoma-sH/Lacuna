@@ -61,11 +61,10 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgBase,
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
           const Positioned.fill(child: GrainOverlay()),
-          _AtmosphericGlow(),
           SafeArea(
             bottom: false,
             child: CustomScrollView(
@@ -153,32 +152,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-class _AtmosphericGlow extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: -100,
-      left: -60,
-      right: -60,
-      height: 360,
-      child: IgnorePointer(
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: RadialGradient(
-              center: Alignment.topCenter,
-              radius: 1.0,
-              colors: [
-                AppColors.accentDeep.withValues(alpha: 0.22),
-                Colors.transparent,
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _TopRail extends StatelessWidget {
   const _TopRail({required this.onSettings});
 
@@ -247,19 +220,10 @@ class _AvatarHero extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.xl),
       child: Center(
-        child: SizedBox(
-          height: 180,
-          width: 180,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              ScallopedAvatar(
-                size: 168,
-                initial: 'T',
-                color: color,
-              ),
-            ],
-          ),
+        child: ScallopedAvatar(
+          size: 168,
+          initial: 'T',
+          color: color,
         ),
       ),
     );
