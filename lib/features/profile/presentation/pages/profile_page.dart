@@ -2,7 +2,6 @@ import 'package:first_flutter_app/features/auth/domain/entities/app_user.dart';
 import 'package:first_flutter_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:first_flutter_app/shared/theme/app_colors.dart';
 import 'package:first_flutter_app/shared/theme/app_spacing.dart';
-import 'package:first_flutter_app/shared/widgets/breathing_blob.dart';
 import 'package:first_flutter_app/shared/widgets/grain_overlay.dart';
 import 'package:first_flutter_app/shared/widgets/scalloped_avatar.dart';
 import 'package:first_flutter_app/shared/widgets/tap_bounce.dart';
@@ -254,15 +253,6 @@ class _AvatarHero extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Positioned.fill(
-                child: Center(
-                  child: BreathingBlob(
-                    color: color.withValues(alpha: 0.35),
-                    size: 200,
-                    glowIntensity: 0.6,
-                  ),
-                ),
-              ),
               ScallopedAvatar(
                 size: 168,
                 initial: 'T',

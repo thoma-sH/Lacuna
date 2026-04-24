@@ -48,28 +48,17 @@ class ScallopedClipper extends CustomClipper<Path> {
 class _ScallopBorderPainter extends CustomPainter {
   const _ScallopBorderPainter({
     required this.color,
-    required this.glowColor,
     required this.lobes,
     required this.depth,
   });
 
   final Color color;
-  final Color glowColor;
   final int lobes;
   final double depth;
 
   @override
   void paint(Canvas canvas, Size size) {
     final path = buildScallopPath(size, lobes: lobes, depth: depth);
-
-    canvas.drawPath(
-      path,
-      Paint()
-        ..color = glowColor
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 10
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10),
-    );
 
     canvas.drawPath(
       path,
@@ -82,10 +71,7 @@ class _ScallopBorderPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_ScallopBorderPainter old) =>
-      old.color != color ||
-      old.glowColor != glowColor ||
-      old.lobes != lobes ||
-      old.depth != depth;
+      old.color != color || old.lobes != lobes || old.depth != depth;
 }
 
 class ScallopedAvatar extends StatelessWidget {
@@ -116,7 +102,6 @@ class ScallopedAvatar extends StatelessWidget {
             size: Size.square(size),
             painter: _ScallopBorderPainter(
               color: border,
-              glowColor: border.withValues(alpha: 0.35),
               lobes: shape.lobes,
               depth: shape.depth,
             ),
@@ -180,7 +165,6 @@ class ScallopedOutlineButton extends StatelessWidget {
         child: CustomPaint(
           painter: _ScallopBorderPainter(
             color: border,
-            glowColor: Colors.transparent,
             lobes: shape.lobes,
             depth: shape.depth,
           ),

@@ -28,7 +28,6 @@ class _RegisterPageState extends State<RegisterPage> {
     }
     context.read<AuthCubit>().register(
           _usernameController.text.trim().toLowerCase(),
-          '',
           _passwordController.text,
         );
   }
@@ -66,8 +65,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       if (value == null || value.trim().isEmpty) {
                         return 'Username is required';
                       }
-                      if (!RegExp(r'^[a-zA-Z0-9_.]{3,20}$').hasMatch(value)) {
-                        return 'Use 3-20 letters, numbers, _ or .';
+                      if (!RegExp(r'^[a-zA-Z0-9_-]{3,20}$').hasMatch(value)) {
+                        return 'Use 3–20 characters: letters, numbers, _ or -';
+                      }
+                      if (!RegExp(r'[a-zA-Z]').hasMatch(value)) {
+                        return 'Must contain at least one letter';
                       }
                       return null;
                     },

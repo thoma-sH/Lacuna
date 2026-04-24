@@ -4,7 +4,6 @@ import 'package:first_flutter_app/features/feed/presentation/widgets/verdict_pil
 import 'package:first_flutter_app/shared/theme/app_colors.dart';
 import 'package:first_flutter_app/shared/theme/app_motion.dart';
 import 'package:first_flutter_app/shared/theme/app_spacing.dart';
-import 'package:first_flutter_app/shared/widgets/breathing_blob.dart';
 import 'package:first_flutter_app/shared/widgets/shimmer_box.dart';
 import 'package:first_flutter_app/shared/widgets/tap_bounce.dart';
 import 'package:flutter/material.dart';
@@ -90,7 +89,6 @@ class _ImmersiveFeedTileState extends State<ImmersiveFeedTile>
     final post = widget.post;
     return Stack(
       children: [
-        _AtmosphericTint(color: post.blobColor),
         SafeArea(
           bottom: false,
           child: Padding(
@@ -153,34 +151,6 @@ class _ImmersiveFeedTileState extends State<ImmersiveFeedTile>
           ),
         ),
       ],
-    );
-  }
-}
-
-class _AtmosphericTint extends StatelessWidget {
-  const _AtmosphericTint({required this.color});
-
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: IgnorePointer(
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: RadialGradient(
-              center: const Alignment(0, -0.4),
-              radius: 1.1,
-              colors: [
-                color.withValues(alpha: 0.18),
-                color.withValues(alpha: 0.04),
-                Colors.transparent,
-              ],
-              stops: const [0.0, 0.4, 1.0],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -288,7 +258,14 @@ class _AlbumHeadline extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              BreathingBlob(color: post.blobColor, size: 14),
+              Container(
+                width: 7,
+                height: 7,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: post.blobColor,
+                ),
+              ),
               const SizedBox(width: AppSpacing.md),
               Flexible(
                 child: Text(
@@ -340,12 +317,6 @@ class _PhotoFrame extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppRadii.xl),
             border: Border.all(color: post.blobColor, width: 1.5),
             boxShadow: [
-              BoxShadow(
-                color: post.blobColor.withValues(alpha: 0.42),
-                blurRadius: 36,
-                spreadRadius: -10,
-                offset: const Offset(0, 12),
-              ),
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.4),
                 blurRadius: 24,

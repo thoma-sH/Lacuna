@@ -15,8 +15,6 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _stayLoggedIn = true;
-
   @override
   void dispose() {
     _usernameController.dispose();
@@ -94,14 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 8),
-                    SwitchListTile.adaptive(
-                      contentPadding: EdgeInsets.zero,
-                      value: _stayLoggedIn,
-                      title: const Text('Stay logged in'),
-                      onChanged: (value) => setState(() => _stayLoggedIn = value),
-                    ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 16),
                     BlocBuilder<AuthCubit, AuthState>(
                       builder: (context, state) {
                         final loading = state is AuthLoading;
@@ -121,11 +112,6 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       },
                       child: const Text('Create account'),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Demo login: username demo / password123',
-                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),
