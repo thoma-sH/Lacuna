@@ -27,6 +27,7 @@ enum BackgroundMode {
   orbs,
   aurora,
   noise,
+  iosGlass,
 }
 
 class ColorPalette {

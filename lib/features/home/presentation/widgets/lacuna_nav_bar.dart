@@ -2,7 +2,6 @@ import 'package:first_flutter_app/shared/theme/app_colors.dart';
 import 'package:first_flutter_app/shared/theme/app_motion.dart';
 import 'package:first_flutter_app/shared/theme/app_spacing.dart';
 import 'package:first_flutter_app/shared/widgets/glass_surface.dart';
-import 'package:first_flutter_app/shared/widgets/scalloped_avatar.dart';
 import 'package:first_flutter_app/shared/widgets/tap_bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -53,29 +52,78 @@ class LacunaNavBar extends StatelessWidget {
       ),
       child: SafeArea(
         top: false,
-        child: GlassSurface(
-          borderRadius: AppRadii.pill,
-          thickness: GlassThickness.thick,
-          child: SizedBox(
-            height: 60,
-            child: Row(
-              children: List.generate(_items.length, (i) {
-                if (i == 2) {
-                  return Expanded(
-                    child: _PostButton(onTap: () => onTap(i)),
-                  );
-                }
-                return Expanded(
-                  child: _NavTile(
-                    item: _items[i],
-                    isActive: currentIndex == i,
-                    onTap: () {
-                      HapticFeedback.selectionClick();
-                      onTap(i);
-                    },
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppRadii.pill),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.55),
+                blurRadius: 32,
+                spreadRadius: 2,
+                offset: const Offset(0, 14),
+              ),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.30),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: GlassSurface(
+            borderRadius: AppRadii.pill,
+            thickness: GlassThickness.thick,
+            tintOverride: AppColors.surface1.withValues(alpha: 0.92),
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: 60,
+                  child: Row(
+                    children: List.generate(_items.length, (i) {
+                      if (i == 2) {
+                        return Expanded(
+                          child: _PostButton(onTap: () => onTap(i)),
+                        );
+                      }
+                      return Expanded(
+                        child: _NavTile(
+                          item: _items[i],
+                          isActive: currentIndex == i,
+                          onTap: () {
+                            HapticFeedback.selectionClick();
+                            onTap(i);
+                          },
+                        ),
+                      );
+                    }),
                   ),
-                );
-              }),
+                ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  height: 1,
+                  child: IgnorePointer(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.18),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  height: 1,
+                  child: IgnorePointer(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.30),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -159,22 +207,62 @@ class _PostButton extends StatelessWidget {
 
   final VoidCallback onTap;
 
-  static const double _size = 42;
+  static const double _size = 46;
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: ScallopedOutlineButton(
+      child: TapBounce(
+        scaleTo: 0.88,
         onTap: () {
           HapticFeedback.lightImpact();
           onTap();
         },
-        size: _size,
-        borderColor: AppColors.accent,
-        child: Icon(
-          PhosphorIconsLight.plus,
-          color: AppColors.accent,
-          size: 18,
+        child: Container(
+          width: _size,
+          height: _size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.accent,
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.accentGlow,
+                blurRadius: 18,
+                spreadRadius: 1,
+              ),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.35),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.28),
+              width: 1,
+            ),
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Positioned(
+                top: 4,
+                left: _size * 0.22,
+                right: _size * 0.22,
+                height: 1.2,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.55),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              Icon(
+                PhosphorIconsBold.plus,
+                color: Colors.white,
+                size: 20,
+              ),
+            ],
+          ),
         ),
       ),
     );

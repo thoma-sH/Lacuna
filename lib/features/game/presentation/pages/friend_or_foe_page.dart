@@ -140,23 +140,6 @@ class _FriendOrFoePageState extends State<FriendOrFoePage>
       body: Stack(
         children: [
           const Positioned.fill(child: GrainOverlay()),
-          const Positioned(
-            top: -80,
-            left: -60,
-            right: -60,
-            height: 380,
-            child: IgnorePointer(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    center: Alignment.topCenter,
-                    radius: 1.0,
-                    colors: [Color(0x386A57BC), Colors.transparent],
-                  ),
-                ),
-              ),
-            ),
-          ),
           SafeArea(
             child: CustomScrollView(
               physics: const BouncingScrollPhysics(),

@@ -269,20 +269,7 @@ class _AlbumTile extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color.lerp(album.color, Colors.white, 0.12) ?? album.color,
-                  album.color,
-                  Color.lerp(album.color, Colors.black, 0.52) ?? album.color,
-                ],
-                stops: const [0, 0.45, 1],
-              ),
-            ),
-          ),
+          ColoredBox(color: album.color),
           const DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(

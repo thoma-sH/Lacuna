@@ -2,9 +2,13 @@ import 'package:first_flutter_app/features/auth/domain/entities/app_user.dart';
 import 'package:first_flutter_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:first_flutter_app/shared/theme/app_colors.dart';
 import 'package:first_flutter_app/shared/theme/app_spacing.dart';
+import 'package:first_flutter_app/shared/theme/lacuna_theme.dart';
+import 'package:first_flutter_app/shared/theme/lacuna_theme_provider.dart';
+import 'package:first_flutter_app/shared/widgets/breathing_sparkle.dart';
 import 'package:first_flutter_app/shared/widgets/glass_surface.dart';
 import 'package:first_flutter_app/shared/widgets/grain_overlay.dart';
 import 'package:first_flutter_app/shared/widgets/scalloped_avatar.dart';
+import 'package:first_flutter_app/shared/widgets/sparkle_cluster.dart';
 import 'package:first_flutter_app/shared/widgets/tap_bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -76,7 +80,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 SliverToBoxAdapter(
                   child: _IdentityBlock(username: widget.user.username),
                 ),
-                const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xl)),
+                const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
                 SliverToBoxAdapter(
                   child: _LacunaHero(
                     label: _lacunaLabel,
@@ -168,15 +172,8 @@ class _TopRail extends StatelessWidget {
         0,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(
-            'you',
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: AppColors.textTertiary,
-              letterSpacing: 0.6,
-            ),
-          ),
           Row(
             children: [
               TapBounce(
@@ -218,13 +215,50 @@ class _AvatarHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isCalm =
+        LacunaThemeScope.of(context).variant == LacunaThemeVariant.calm;
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.xl),
-      child: Center(
-        child: ScallopedAvatar(
-          size: 168,
-          initial: 'T',
-          color: color,
+      child: SizedBox(
+        height: 196,
+        child: Stack(
+          alignment: Alignment.center,
+          clipBehavior: Clip.none,
+          children: [
+            ScallopedAvatar(size: 168, initial: 'T', color: color),
+            if (isCalm) ...[
+              Positioned(
+                top: 4,
+                left: MediaQuery.of(context).size.width * 0.18,
+                child: BreathingSparkle(
+                  color: AppColors.accent,
+                  size: 18,
+                  duration: const Duration(milliseconds: 5400),
+                  phaseOffset: 0.2,
+                ),
+              ),
+              Positioned(
+                top: 32,
+                right: MediaQuery.of(context).size.width * 0.14,
+                child: BreathingSparkle(
+                  color: AppColors.accent,
+                  size: 12,
+                  duration: const Duration(milliseconds: 4600),
+                  phaseOffset: 0.65,
+                ),
+              ),
+              Positioned(
+                bottom: 8,
+                right: MediaQuery.of(context).size.width * 0.22,
+                child: BreathingSparkle(
+                  color: AppColors.accent,
+                  size: 9,
+                  duration: const Duration(milliseconds: 5000),
+                  phaseOffset: 0.4,
+                ),
+              ),
+            ],
+          ],
         ),
       ),
     );
@@ -242,7 +276,7 @@ class _IdentityBlock extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.xl,
-        AppSpacing.lg,
+        AppSpacing.md,
         AppSpacing.xl,
         0,
       ),
@@ -259,7 +293,7 @@ class _IdentityBlock extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            '@${username.toLowerCase()} · capturing quiet moments',
+            'capturing quiet moments',
             textAlign: TextAlign.center,
             style: textTheme.bodySmall?.copyWith(
               color: AppColors.textTertiary,
@@ -296,26 +330,42 @@ class _LacunaHero extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
       child: Column(
         children: [
-          GestureDetector(
-            onLongPress: onTapLabel,
-            child: Text(
-              label.toLowerCase(),
-              style: textTheme.labelSmall?.copyWith(
-                color: AppColors.textTertiary,
-                letterSpacing: 1.6,
-                fontSize: 10,
-              ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
           Text(
-            _fmt(total),
+            '$total',
             style: textTheme.displayLarge?.copyWith(
               color: AppColors.accent,
               fontWeight: FontWeight.w200,
-              letterSpacing: -2.5,
+              letterSpacing: -2.4,
               height: 1.0,
-              fontSize: 64,
+              fontSize: 72,
+              shadows: [
+                Shadow(
+                  color: AppColors.accentGlow,
+                  blurRadius: 28,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          GestureDetector(
+            onLongPress: onTapLabel,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SparkleCluster(color: AppColors.accent, size: 26),
+                const SizedBox(width: AppSpacing.sm),
+                Text(
+                  label.toLowerCase(),
+                  style: textTheme.labelMedium?.copyWith(
+                    color: AppColors.textSecondary,
+                    letterSpacing: 1.8,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -362,8 +412,8 @@ class _ScoreBreakdown extends StatelessWidget {
         Text(
           label,
           style: textTheme.labelSmall?.copyWith(
-            color: AppColors.textTertiary,
-            fontSize: 10,
+            color: AppColors.textSecondary,
+            fontSize: 11,
           ),
         ),
       ],
@@ -430,8 +480,8 @@ class _Pill extends StatelessWidget {
           Text(
             label,
             style: textTheme.labelSmall?.copyWith(
-              color: AppColors.textTertiary,
-              fontSize: 10,
+              color: AppColors.textSecondary,
+              fontSize: 11,
               letterSpacing: 0.4,
             ),
           ),
@@ -453,8 +503,9 @@ class _SectionLabel extends StatelessWidget {
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
-          color: AppColors.textTertiary,
+          color: AppColors.textSecondary,
           letterSpacing: 0.6,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );
@@ -525,26 +576,35 @@ const _mockAlbums = <_Album>[
 class _AlbumShelf extends StatelessWidget {
   const _AlbumShelf();
 
+  static const _heights = <double>[140, 168, 124, 156, 132, 148];
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 220,
+      height: 240,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
         itemCount: _mockAlbums.length,
         separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.md),
-        itemBuilder: (_, i) => _AlbumCard(album: _mockAlbums[i]),
+        itemBuilder: (_, i) => Align(
+          alignment: Alignment.bottomCenter,
+          child: _AlbumCard(
+            album: _mockAlbums[i],
+            tileHeight: _heights[i % _heights.length],
+          ),
+        ),
       ),
     );
   }
 }
 
 class _AlbumCard extends StatelessWidget {
-  const _AlbumCard({required this.album});
+  const _AlbumCard({required this.album, required this.tileHeight});
 
   final _Album album;
+  final double tileHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -558,29 +618,16 @@ class _AlbumCard extends StatelessWidget {
         width: 150,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
+            SizedBox(
+              height: tileHeight,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(AppSpacing.md),
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color.lerp(album.color, Colors.white, 0.18) ??
-                                album.color,
-                            album.color,
-                            Color.lerp(album.color, Colors.black, 0.55) ??
-                                album.color,
-                          ],
-                          stops: const [0, 0.45, 1],
-                        ),
-                      ),
-                    ),
+                    ColoredBox(color: album.color),
                     Positioned(
                       top: AppSpacing.sm,
                       right: AppSpacing.sm,
@@ -631,7 +678,7 @@ class _AlbumCard extends StatelessWidget {
             ),
             const SizedBox(height: 1),
             Text(
-              '"${album.theme}"',
+              album.theme,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: textTheme.labelSmall?.copyWith(
@@ -683,19 +730,19 @@ class _ActivityEntry {
 const _mockActivity = <_ActivityEntry>[
   _ActivityEntry(
     icon: PhosphorIconsFill.check,
-    text: 'voted FITS on @sarah\'s sunsets post',
+    text: 'voted FITS on sarah\'s sunsets post',
     timeAgo: '12m',
     color: Color(0xFFE08A4D),
   ),
   _ActivityEntry(
     icon: PhosphorIconsLight.bookmarkSimple,
-    text: 'saved a post in @ivy\'s mossy',
+    text: 'saved a post in ivy\'s mossy',
     timeAgo: '1h',
     color: Color(0xFF6B8E6B),
   ),
   _ActivityEntry(
     icon: PhosphorIconsFill.gameController,
-    text: 'beat @theo.k at chess (+1)',
+    text: 'beat theo.k at chess (+1)',
     timeAgo: '3h',
     color: Color(0xFFB7A6F0),
   ),
@@ -707,7 +754,7 @@ const _mockActivity = <_ActivityEntry>[
   ),
   _ActivityEntry(
     icon: PhosphorIconsLight.x,
-    text: 'voted DOESN\'T FIT on @cass\'s coffee',
+    text: 'voted DOESN\'T FIT on cass\'s coffee',
     timeAgo: '1d',
     color: Color(0xFFD17B8E),
   ),

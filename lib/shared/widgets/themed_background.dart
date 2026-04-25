@@ -34,6 +34,8 @@ class ThemedBackground extends StatelessWidget {
         return _AuroraBackground(theme: theme);
       case BackgroundMode.noise:
         return _NoiseBackground(theme: theme);
+      case BackgroundMode.iosGlass:
+        return _IOSGlassBackground(theme: theme);
     }
   }
 }
@@ -45,14 +47,20 @@ class _GradientBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: theme.bgGradient,
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: theme.bgGradient,
+            ),
+          ),
         ),
-      ),
+        const Positioned.fill(child: GrainOverlay(opacity: 0.06)),
+      ],
     );
   }
 }
@@ -121,6 +129,7 @@ class _OrbsBackgroundState extends State<_OrbsBackground>
             );
           },
         ),
+        const Positioned.fill(child: GrainOverlay(opacity: 0.06)),
       ],
     );
   }
@@ -229,6 +238,7 @@ class _AuroraBackgroundState extends State<_AuroraBackground>
             );
           },
         ),
+        const Positioned.fill(child: GrainOverlay(opacity: 0.06)),
       ],
     );
   }
@@ -291,6 +301,138 @@ class _NoiseBackground extends StatelessWidget {
         ),
         const Positioned.fill(child: GrainOverlay(opacity: 0.08)),
       ],
+    );
+  }
+}
+
+class _IOSGlassBackground extends StatefulWidget {
+  const _IOSGlassBackground({required this.theme});
+
+  final LacunaTheme theme;
+
+  @override
+  State<_IOSGlassBackground> createState() => _IOSGlassBackgroundState();
+}
+
+class _IOSGlassBackgroundState extends State<_IOSGlassBackground>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+
+  static const _orbColors = <Color>[
+    Color(0xFFFFB39E),
+    Color(0xFFC5B5F0),
+    Color(0xFFB8E5D0),
+    Color(0xFF9FCBFF),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      duration: Duration(
+        milliseconds: (26000 / widget.theme.motionScale).round(),
+      ),
+      vsync: this,
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: widget.theme.bgGradient,
+            ),
+          ),
+        ),
+        AnimatedBuilder(
+          animation: _ctrl,
+          builder: (_, _) {
+            final t = _ctrl.value * 2 * math.pi;
+            return Stack(
+              fit: StackFit.expand,
+              children: [
+                _GlassOrb(
+                  color: _orbColors[0].withValues(alpha: 0.55),
+                  alignment: Alignment(
+                    -0.55 + 0.3 * math.sin(t),
+                    -0.55 + 0.18 * math.cos(t * 0.8),
+                  ),
+                  scale: 1.45,
+                ),
+                _GlassOrb(
+                  color: _orbColors[1].withValues(alpha: 0.50),
+                  alignment: Alignment(
+                    0.55 + 0.25 * math.cos(t * 0.7),
+                    -0.25 + 0.22 * math.sin(t * 0.9),
+                  ),
+                  scale: 1.65,
+                ),
+                _GlassOrb(
+                  color: _orbColors[2].withValues(alpha: 0.45),
+                  alignment: Alignment(
+                    -0.4 + 0.32 * math.sin(t * 0.6),
+                    0.6 + 0.2 * math.cos(t * 1.1),
+                  ),
+                  scale: 1.35,
+                ),
+                _GlassOrb(
+                  color: _orbColors[3].withValues(alpha: 0.50),
+                  alignment: Alignment(
+                    0.65 + 0.22 * math.cos(t * 1.2),
+                    0.45 + 0.25 * math.sin(t * 0.5),
+                  ),
+                  scale: 1.55,
+                ),
+              ],
+            );
+          },
+        ),
+        const Positioned.fill(child: GrainOverlay(opacity: 0.04)),
+      ],
+    );
+  }
+}
+
+class _GlassOrb extends StatelessWidget {
+  const _GlassOrb({
+    required this.color,
+    required this.alignment,
+    required this.scale,
+  });
+
+  final Color color;
+  final Alignment alignment;
+  final double scale;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: alignment,
+      child: FractionallySizedBox(
+        widthFactor: scale,
+        heightFactor: scale,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: RadialGradient(
+              colors: [color, color.withValues(alpha: 0), Colors.transparent],
+              stops: const [0.0, 0.6, 1.0],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

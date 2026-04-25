@@ -94,6 +94,35 @@ class _ThemePreviewPainter extends CustomPainter {
         ).createShader(rect);
         canvas.drawRect(rect, Paint()..shader = gradient);
         _paintNoise(canvas, size);
+
+      case BackgroundMode.iosGlass:
+        final gradient = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: theme.bgGradient,
+        ).createShader(rect);
+        canvas.drawRect(rect, Paint()..shader = gradient);
+        _paintOrb(
+          canvas,
+          size,
+          center: Offset(size.width * 0.25, size.height * 0.3),
+          radius: size.shortestSide * 0.5,
+          color: const Color(0xFFFFB39E).withValues(alpha: 0.5),
+        );
+        _paintOrb(
+          canvas,
+          size,
+          center: Offset(size.width * 0.75, size.height * 0.35),
+          radius: size.shortestSide * 0.55,
+          color: const Color(0xFFC5B5F0).withValues(alpha: 0.45),
+        );
+        _paintOrb(
+          canvas,
+          size,
+          center: Offset(size.width * 0.7, size.height * 0.8),
+          radius: size.shortestSide * 0.45,
+          color: const Color(0xFF9FCBFF).withValues(alpha: 0.45),
+        );
     }
   }
 

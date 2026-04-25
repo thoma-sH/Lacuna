@@ -45,25 +45,6 @@ class _PostCapturePageState extends State<PostCapturePage> {
       body: Stack(
         children: [
           const Positioned.fill(child: GrainOverlay()),
-          if (selectedColor != null)
-            Positioned(
-              top: -80,
-              left: -60,
-              right: -60,
-              height: 340,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    center: Alignment.topCenter,
-                    radius: 1.0,
-                    colors: [
-                      selectedColor.withValues(alpha: 0.18),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
-              ),
-            ),
           SafeArea(
             bottom: false,
             child: ListView(
@@ -482,15 +463,7 @@ class _PostButton extends StatelessWidget {
           duration: const Duration(milliseconds: 250),
           height: 52,
           decoration: BoxDecoration(
-            gradient: enabled
-                ? LinearGradient(
-                    colors: [
-                      activeColor.withValues(alpha: 0.85),
-                      activeColor,
-                    ],
-                  )
-                : null,
-            color: enabled ? null : AppColors.surface1,
+            color: enabled ? activeColor : AppColors.surface1,
             borderRadius: BorderRadius.circular(AppSpacing.xl),
             border: Border.all(
               color: enabled

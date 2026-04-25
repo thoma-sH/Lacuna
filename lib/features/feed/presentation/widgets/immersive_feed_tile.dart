@@ -202,7 +202,7 @@ class _TopBar extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.sm),
           Text(
-            '@${post.author.toLowerCase()}',
+            post.author.toLowerCase(),
             style: textTheme.bodySmall?.copyWith(
               color: AppColors.textPrimary,
               fontWeight: FontWeight.w500,
@@ -287,7 +287,7 @@ class _AlbumHeadline extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.xs + 2),
           Text(
-            '"${post.themeDescription}"',
+            post.themeDescription,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
@@ -377,20 +377,7 @@ class _GradientFallback extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        gradient: RadialGradient(
-          center: const Alignment(-0.4, -0.6),
-          radius: 1.5,
-          colors: [
-            Color.lerp(color, Colors.white, 0.18) ?? color,
-            color,
-            Color.lerp(color, Colors.black, 0.7) ?? color,
-          ],
-          stops: const [0.0, 0.45, 1.0],
-        ),
-      ),
-    );
+    return ColoredBox(color: color);
   }
 }
 
