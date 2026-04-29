@@ -55,5 +55,53 @@ app.*.map.json
 .env
 *.env
 
+# iOS / Xcode — generated, large, or per-machine
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/app.flx
+ios/Flutter/flutter_assets/
+ios/Flutter/flutter_export_environment.sh
+ios/ServiceDefinitions.json
+ios/Runner/GeneratedPluginRegistrant.*
+**/*.xcuserstate
+**/xcuserdata/
+
+# Android signing — committing a keystore is a permanent leak
+android/key.properties
+android/app/key.jks
+android/app/upload-keystore.jks
+*.jks
+*.keystore
+android/local.properties
+
+# Desktop builds (macOS / Linux / Windows) — not shipping in v1
+macos/Pods/
+macos/Flutter/GeneratedPluginRegistrant.*
+linux/flutter/ephemeral/
+windows/flutter/ephemeral/
+
+# Sentry symbol uploads — sometimes auto-generated, large
+*.dSYM.zip
+*.dSYM/
+.sentryclirc
+
+# Test artifacts
+/coverage/
+/test_reports/
+junit.xml
+
+# Misc local
+*.iml.bak
+*.bak
+*.tmp
+*.orig
+
 # Claude Code settings and custom skills (local only)
 .claude/
+
+# Internal launch tracking — keep local
+LAUNCH_CHECKLIST.md
