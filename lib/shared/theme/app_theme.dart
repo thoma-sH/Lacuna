@@ -8,7 +8,11 @@ import 'app_typography.dart';
 class AppTheme {
   AppTheme._();
 
-  static ThemeData dark() {
+  /// Build a Material [ThemeData] from the active Lacuna variant.
+  /// The variant declares its own brightness; [MaterialApp.themeMode] should
+  /// follow it (see `app.dart`). Same builder is used for `theme` and
+  /// `darkTheme` slots — the variant is the single source of truth.
+  static ThemeData fromVariant() {
     final textTheme = AppTypography.build();
     final brightness = currentLacunaTheme.palette.brightness;
 

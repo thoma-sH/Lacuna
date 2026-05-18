@@ -14,25 +14,31 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BlobApp extends StatelessWidget {
-  const BlobApp({super.key});
+class LacunaApp extends StatelessWidget {
+  const LacunaApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // The LacunaThemeScope and ValueListenableBuilder are used to manage the app's theme based on the current LacunaThemeVariant.
     return ValueListenableBuilder<LacunaThemeVariant>(
       valueListenable: lacunaThemeNotifier,
       builder: (_, variant, _) {
         final theme = themeFor(variant);
+        final mode = theme.palette.brightness == Brightness.light
+            ? ThemeMode.light
+            : ThemeMode.dark;
+        final materialTheme = AppTheme.fromVariant();
         return LacunaThemeScope(
           theme: theme,
           child: BlocProvider(
-            create: (_) => AuthCubit(authRepo: kDebugMode ? MockAuthRepo() : SupabaseAuthRepo())..checkAuth(),
+            create: (_) =>
+                AuthCubit(authRepo: kDebugMode ? MockAuthRepo() : SupabaseAuthRepo())
+                  ..checkAuth(),
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Lacuna',
-              theme: AppTheme.dark(),
-              themeMode: ThemeMode.dark,
+              theme: materialTheme,
+              darkTheme: materialTheme,
+              themeMode: mode,
               home: const _AuthGate(),
               builder: (context, child) => Stack(
                 children: [

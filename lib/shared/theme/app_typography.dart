@@ -7,33 +7,44 @@ import 'app_colors.dart';
 class AppTypography {
   AppTypography._();
 
+  /// Variants that already declare a serif body font keep that serif on
+  /// display sizes. Sans/mono variants get Fraunces on display only — body
+  /// text stays on the variant's chosen font for readability.
+  static const _serifVariantFonts = {'Lora', 'Cinzel', 'Fraunces'};
+
   static TextTheme build() {
-    final base = GoogleFonts.getTextTheme(currentLacunaTheme.fontName);
+    final variant = currentLacunaTheme;
+    final base = GoogleFonts.getTextTheme(variant.fontName);
+    final displayFamily = _serifVariantFonts.contains(variant.fontName)
+        ? variant.fontName
+        : 'Fraunces';
+    final display = GoogleFonts.getTextTheme(displayFamily);
+
     return TextTheme(
-      displayLarge: base.displayLarge?.copyWith(
+      displayLarge: display.displayLarge?.copyWith(
         fontSize: 48,
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w400,
         letterSpacing: -1.2,
         height: 1.05,
         color: AppColors.textPrimary,
       ),
-      displayMedium: base.displayMedium?.copyWith(
+      displayMedium: display.displayMedium?.copyWith(
         fontSize: 36,
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w400,
         letterSpacing: -0.8,
         height: 1.1,
         color: AppColors.textPrimary,
       ),
-      displaySmall: base.displaySmall?.copyWith(
+      displaySmall: display.displaySmall?.copyWith(
         fontSize: 32,
-        fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w400,
         letterSpacing: -0.5,
         height: 1.1,
         color: AppColors.textPrimary,
       ),
-      headlineLarge: base.headlineLarge?.copyWith(
+      headlineLarge: display.headlineLarge?.copyWith(
         fontSize: 24,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
         letterSpacing: -0.4,
         color: AppColors.textPrimary,
       ),

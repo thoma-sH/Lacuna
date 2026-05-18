@@ -125,33 +125,36 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
+    final canPop = Navigator.of(context).canPop();
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.sm,
+      padding: EdgeInsets.fromLTRB(
+        canPop ? AppSpacing.sm : AppSpacing.xl,
         AppSpacing.sm,
         AppSpacing.lg,
         0,
       ),
       child: Row(
         children: [
-          TapBounce(
-            scaleTo: 0.85,
-            onTap: () => Navigator.pop(context),
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.sm + 2),
-              child: Icon(
-                PhosphorIconsLight.arrowLeft,
-                color: AppColors.textSecondary,
-                size: 22,
+          if (canPop) ...[
+            TapBounce(
+              scaleTo: 0.85,
+              onTap: () => Navigator.pop(context),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.sm + 2),
+                child: Icon(
+                  PhosphorIconsLight.arrowLeft,
+                  color: AppColors.textSecondary,
+                  size: 22,
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
+            const SizedBox(width: AppSpacing.sm),
+          ],
           Text(
             'traces',
             style: t.headlineMedium?.copyWith(
               color: AppColors.textPrimary,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w400,
               letterSpacing: -0.4,
             ),
           ),

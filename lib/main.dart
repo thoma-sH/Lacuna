@@ -16,7 +16,7 @@ Future<void> main() async {
 
   final sentryDsn = dotenv.env['SENTRY_DSN'];
   if (sentryDsn == null || sentryDsn.isEmpty) {
-    runApp(const BlobApp());
+    runApp(const LacunaApp());
     return;
   }
 
@@ -29,6 +29,6 @@ Future<void> main() async {
       options.sendDefaultPii = false;
       options.attachScreenshot = false;
     },
-    appRunner: () => runApp(SentryWidget(child: const BlobApp())),
+    appRunner: () => runApp(SentryWidget(child: const LacunaApp())),
   );
 }

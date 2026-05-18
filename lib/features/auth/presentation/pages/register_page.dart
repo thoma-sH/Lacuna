@@ -5,9 +5,11 @@ import 'package:first_flutter_app/shared/theme/app_colors.dart';
 import 'package:first_flutter_app/shared/theme/app_motion.dart';
 import 'package:first_flutter_app/shared/theme/app_spacing.dart';
 import 'package:first_flutter_app/shared/utils/url_launch.dart';
+import 'package:first_flutter_app/shared/widgets/tap_bounce.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -44,6 +46,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is Authenticated) {
@@ -56,74 +59,184 @@ class _RegisterPageState extends State<RegisterPage> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('Create account')),
+        backgroundColor: Colors.transparent,
         body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  TextFormField(
-                    controller: _usernameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Username',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Username is required';
-                      }
-                      if (!RegExp(r'^[a-zA-Z0-9_-]{3,20}$').hasMatch(value)) {
-                        return 'Use 3–20 characters: letters, numbers, _ or -';
-                      }
-                      if (!RegExp(r'[a-zA-Z]').hasMatch(value)) {
-                        return 'Must contain at least one letter';
-                      }
-                      return null;
-                    },
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 440),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(AppSpacing.xl),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          TapBounce(
+                            scaleTo: 0.85,
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Padding(
+                              padding: const EdgeInsets.all(AppSpacing.sm),
+                              child: Icon(
+                                PhosphorIconsLight.arrowLeft,
+                                color: AppColors.textSecondary,
+                                size: 22,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Text(
+                            'create account',
+                            style: textTheme.headlineSmall?.copyWith(
+                              color: AppColors.textPrimary,
+                              fontWeight: FontWeight.w400,
+                              letterSpacing: -0.3,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.xxl),
+                      _AuthField(
+                        controller: _usernameController,
+                        label: 'username',
+                        textInputAction: TextInputAction.next,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'username is required';
+                          }
+                          if (!RegExp(r'^[a-zA-Z0-9_-]{3,20}$').hasMatch(value)) {
+                            return '3–20 chars: letters, numbers, _ or -';
+                          }
+                          if (!RegExp(r'[a-zA-Z]').hasMatch(value)) {
+                            return 'must contain at least one letter';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      _AuthField(
+                        controller: _passwordController,
+                        label: 'password',
+                        obscureText: true,
+                        textInputAction: TextInputAction.done,
+                        onSubmitted: (_) => _submit(),
+                        validator: (value) {
+                          if (value == null || value.length < 8) {
+                            return 'at least 8 characters';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      _AgreementBlock(
+                        checked: _agreedToTerms,
+                        showError: _showAgreementError && !_agreedToTerms,
+                        onChanged: (v) {
+                          setState(() {
+                            _agreedToTerms = v;
+                            if (v) _showAgreementError = false;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: AppSpacing.xl),
+                      BlocBuilder<AuthCubit, AuthState>(
+                        builder: (context, state) {
+                          final loading = state is AuthLoading;
+                          return _PrimaryButton(
+                            label: loading ? 'creating account' : 'create',
+                            onTap: loading ? null : _submit,
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: AppSpacing.md),
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.length < 8) {
-                        return 'Password must be at least 8 characters';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  _AgreementBlock(
-                    checked: _agreedToTerms,
-                    showError: _showAgreementError && !_agreedToTerms,
-                    onChanged: (v) {
-                      setState(() {
-                        _agreedToTerms = v;
-                        if (v) _showAgreementError = false;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  BlocBuilder<AuthCubit, AuthState>(
-                    builder: (context, state) {
-                      final loading = state is AuthLoading;
-                      return FilledButton(
-                        onPressed: loading ? null : _submit,
-                        child: Text(
-                          loading ? 'Creating account...' : 'Create',
-                        ),
-                      );
-                    },
-                  ),
-                ],
+                ),
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AuthField extends StatelessWidget {
+  const _AuthField({
+    required this.controller,
+    required this.label,
+    this.obscureText = false,
+    this.textInputAction,
+    this.onSubmitted,
+    this.validator,
+  });
+
+  final TextEditingController controller;
+  final String label;
+  final bool obscureText;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onSubmitted;
+  final String? Function(String?)? validator;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return TextFormField(
+      controller: controller,
+      obscureText: obscureText,
+      textInputAction: textInputAction,
+      onFieldSubmitted: onSubmitted,
+      validator: validator,
+      autocorrect: false,
+      enableSuggestions: !obscureText,
+      cursorColor: AppColors.accent,
+      style: textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: textTheme.bodyMedium?.copyWith(
+          color: AppColors.textTertiary,
+        ),
+      ),
+    );
+  }
+}
+
+class _PrimaryButton extends StatelessWidget {
+  const _PrimaryButton({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final disabled = onTap == null;
+    return TapBounce(
+      scaleTo: 0.96,
+      onTap: onTap ?? () {},
+      child: AnimatedOpacity(
+        duration: AppMotion.short,
+        opacity: disabled ? 0.5 : 1.0,
+        child: Container(
+          height: 50,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: AppColors.accent,
+            borderRadius: BorderRadius.circular(AppRadii.md),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.accentGlow,
+                blurRadius: 14,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: Text(
+            label,
+            style: textTheme.labelLarge?.copyWith(
+              color: AppColors.bgBase,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.2,
             ),
           ),
         ),
@@ -154,7 +267,7 @@ class _AgreementBlock extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.surface1,
-        borderRadius: BorderRadius.circular(AppSpacing.sm + 2),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: borderColor, width: showError ? 1.2 : 0.5),
       ),
       child: Column(
@@ -176,9 +289,7 @@ class _AgreementBlock extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: _AgreementText(),
-              ),
+              Expanded(child: _AgreementText()),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -243,6 +354,5 @@ class _AgreementText extends StatelessWidget {
   }
 }
 
-// Tiny helper so we don't need to import gestures.dart at every call site.
 TapGestureRecognizer _tap(VoidCallback onTap) =>
     TapGestureRecognizer()..onTap = onTap;
