@@ -6,6 +6,6 @@ void main() {
   testWidgets('shows login after boot check', (WidgetTester tester) async {
     await tester.pumpWidget(const LacunaApp());
     await tester.pump(const Duration(milliseconds: 400));
-    expect(find.text('Sign in'), findsOneWidget);
+    expect(find.text('sign in'), findsOneWidget);
   });
 }
