@@ -105,3 +105,6 @@ junit.xml
 
 # Internal launch tracking — keep local
 LAUNCH_CHECKLIST.md
+
+# Stray nested copy of the project — do not commit
+/POML/
