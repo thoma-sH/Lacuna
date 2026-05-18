@@ -1,22 +1,82 @@
-# first_flutter_app
-
-My first project with Flutter.
-
-## Social Media App
 # Lacuna
 
-Lacuna is another word for a void or gap. Lacuna is here to fill the void in our social media lives. A social media app I designed to be a mixture of Og Snapchat and Pinterest. Create your own albums and post photos or videos that you think belong in those albums. Reconnect with what social media is supposed to be, sharing your real interests and pasttimes with real friends and followers. Be your own influencer.
-Users can upvote or downvote posts whether they believe it matches/enhances/promotes the theme of the album it was posted in. Entirely up to user discretion!
-It is a work in progress! Thanks for stopping by.
+> The void is the point.
 
-I use Android Studio and build/debug on a Pixel 7 using UpsideDownCake and API 34.
+Lacuna is a Flutter social app organized around **albums** — user-defined themed collections of photos and videos. The community votes on whether a post *fits the album* (curatorial signal), not on whether they personally like it. See `PRODUCT.md` for the product brief and `DESIGN.md` for visual direction.
 
+## Stack
 
-A few resources to get you started on your first Flutter project:
+- Flutter (stable channel, currently 3.41.6) with `flutter_bloc`
+- Supabase (auth, Postgres, Storage) — RLS-first
+- Sentry for crash + performance, gated behind `SENTRY_DSN`
+- Flame + Forge2D for the in-app *Friend or Foe* game
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Local setup
 
-View the [online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+flutter pub get
+cp .env.example .env   # then fill in real values
+flutter run
+```
+
+`.env` is loaded as a Flutter asset and must contain at minimum:
+
+```
+SUPABASE_URL=https://<project>.supabase.co
+SUPABASE_ANON_KEY=<anon-key>
+SENTRY_DSN=                # optional; leave blank to disable crash reporting
+```
+
+The file is gitignored — never commit it.
+
+## Tests
+
+```bash
+flutter analyze
+flutter test
+```
+
+CI runs both on every push to `main` and on PRs (`.github/workflows/ci.yaml`).
+
+## Release builds
+
+### Android
+
+Release signing reads from `android/key.properties` (gitignored). Copy `android/key.properties.example` and fill in real values. To generate an upload keystore:
+
+```bash
+keytool -genkey -v -keystore android/app/upload-keystore.jks \
+  -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+```
+
+Then:
+
+```bash
+flutter build appbundle --release
+```
+
+If `key.properties` is absent, the release build falls back to debug signing so `flutter run --release` still works locally — but a debug-signed bundle cannot be uploaded to Play Console.
+
+Application id: `com.lacuna.app`.
+
+### iOS
+
+Bundle identifier: `com.lacuna.app`. Configure signing in Xcode (`ios/Runner.xcworkspace`) under the Runner target before archiving.
+
+```bash
+flutter build ipa --release
+```
+
+## Repo layout
+
+```
+lib/
+  app/         # root widget, routing
+  features/    # auth, feed, post, profile, explore, search, activity,
+               # moderation, settings, home, game
+  shared/      # theme, widgets, utils, constants
+supabase/      # migrations + RLS audit scripts
+test/          # widget + unit tests
+```
+
+Internal/legacy code may still use `blob` — the user-facing term is **album**.
